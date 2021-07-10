@@ -12,9 +12,9 @@ indexes:
   topic: topics
 params:
   subtitle: 'Thoughts on infosec, programming and systems engineering'
-  brand: Blackburn
+  brand: decodebytes.sh
   googleAnalytics: Your Google Analytics tracking ID
-  disqus: Your Disqus shortname
+  #disqus: Your Disqus shortname
   highlightjs: androidstudio
   dateFormat: '02 Jan 2006, 15:04'
 menu:
