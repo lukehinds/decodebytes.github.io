@@ -1,4 +1,5 @@
 baseurl: 'https://www.example.com/'
+publishDir: "docs"
 languageCode: en-us
 title: decodebytes.sh
 theme: blackburn
