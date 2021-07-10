@@ -1,4 +1,4 @@
-baseurl: 'https://www.example.com/'
+baseurl: 'https://www.decodebytes.sh/'
 publishDir: "docs"
 languageCode: en-us
 title: decodebytes.sh
