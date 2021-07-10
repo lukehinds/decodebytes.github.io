@@ -2,54 +2,54 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on decodebytes.sh</title>
-    <link>https://www.decodebytes.sh/tags/</link>
+    <link>/tags/</link>
     <description>Recent content in Tags on decodebytes.sh</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2021. All rights reserved.</copyright>
-    <lastBuildDate>Fri, 28 Aug 2020 12:29:56 +0100</lastBuildDate><atom:link href="https://www.decodebytes.sh/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 28 Aug 2020 12:29:56 +0100</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>coding</title>
-      <link>https://www.decodebytes.sh/tags/coding/</link>
+      <link>/tags/coding/</link>
       <pubDate>Fri, 28 Aug 2020 12:29:56 +0100</pubDate>
       
-      <guid>https://www.decodebytes.sh/tags/coding/</guid>
+      <guid>/tags/coding/</guid>
       <description></description>
     </item>
     
     <item>
       <title>crypto</title>
-      <link>https://www.decodebytes.sh/tags/crypto/</link>
+      <link>/tags/crypto/</link>
       <pubDate>Fri, 28 Aug 2020 12:29:56 +0100</pubDate>
       
-      <guid>https://www.decodebytes.sh/tags/crypto/</guid>
+      <guid>/tags/crypto/</guid>
       <description></description>
     </item>
     
     <item>
       <title>running</title>
-      <link>https://www.decodebytes.sh/tags/running/</link>
+      <link>/tags/running/</link>
       <pubDate>Fri, 17 Jan 2020 16:29:56 +0100</pubDate>
       
-      <guid>https://www.decodebytes.sh/tags/running/</guid>
+      <guid>/tags/running/</guid>
       <description></description>
     </item>
     
     <item>
       <title>philosophy</title>
-      <link>https://www.decodebytes.sh/tags/philosophy/</link>
+      <link>/tags/philosophy/</link>
       <pubDate>Wed, 17 Aug 2016 16:29:56 +0100</pubDate>
       
-      <guid>https://www.decodebytes.sh/tags/philosophy/</guid>
+      <guid>/tags/philosophy/</guid>
       <description></description>
     </item>
     
     <item>
       <title>thoughts</title>
-      <link>https://www.decodebytes.sh/tags/thoughts/</link>
+      <link>/tags/thoughts/</link>
       <pubDate>Wed, 17 Aug 2016 16:29:56 +0100</pubDate>
       
-      <guid>https://www.decodebytes.sh/tags/thoughts/</guid>
+      <guid>/tags/thoughts/</guid>
       <description></description>
     </item>
     

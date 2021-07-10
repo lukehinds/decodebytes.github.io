@@ -2,10 +2,10 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Topics on decodebytes.sh</title>
-    <link>https://www.decodebytes.sh/topics/</link>
+    <link>/topics/</link>
     <description>Recent content in Topics on decodebytes.sh</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>&amp;copy; 2021. All rights reserved.</copyright><atom:link href="https://www.decodebytes.sh/topics/index.xml" rel="self" type="application/rss+xml" />
+    <copyright>&amp;copy; 2021. All rights reserved.</copyright><atom:link href="/topics/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>
