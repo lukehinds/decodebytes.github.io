@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>running on decodebytes.sh</title>
+    <link>https://www.example.com/tags/running/</link>
+    <description>Recent content in running on decodebytes.sh</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2021. All rights reserved.</copyright>
+    <lastBuildDate>Fri, 17 Jan 2020 16:29:56 +0100</lastBuildDate><atom:link href="https://www.example.com/tags/running/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Montane Spine Challenger 2020</title>
+      <link>https://www.example.com/post/2020-08-28-spine-challenger/</link>
+      <pubDate>Fri, 17 Jan 2020 16:29:56 +0100</pubDate>
+      
+      <guid>https://www.example.com/post/2020-08-28-spine-challenger/</guid>
+      <description>Warning: Contains strong language
+I managed to get to Edale in one piece. This was the first challenge complete. Leading up the race I had been hoovering up any colds or bugs within a 50 meter radius. I had one puking bug and then one head cold bug, just two weeks before the race. I had been militantly washing hands and avoiding public places, but they still landed on me. One Friday evening two weeks out before the race, my six year old said something about wanting to tell me a secret (some nonsense about Unicorns most likely).</description>
+    </item>
+    
+    <item>
+      <title>The Winter Fan Dance 2018</title>
+      <link>https://www.example.com/post/2018-01-08-winter-fan-dance/</link>
+      <pubDate>Wed, 17 Aug 2016 16:29:56 +0100</pubDate>
+      
+      <guid>https://www.example.com/post/2018-01-08-winter-fan-dance/</guid>
+      <description>This Saturday I went out to the Brecon Beacons in South Wales to take part in an mountain endurance event named the &amp;lsquo;Fan Dance&amp;rsquo;. A basic synopsis is best taking from the organisers themselves Avalanche Endurance Events:
+The Fan Dance is a gruelling 24km Special Air Service Selection test march staged over Pen y Fan, the highest mountain in the Brecon Beacons. The infamous march is the world&amp;rsquo;s oldest Special Forces test and is considered the yardstick of a candidate&amp;rsquo;s potential to perform well on Test Week and ultimately pass the SAS &amp;amp; SBS (Special Boat Service) Selection course.</description>
+    </item>
+    
+  </channel>
+</rss>

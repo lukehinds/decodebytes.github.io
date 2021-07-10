@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>https://www.example.com/post/2020-08-28-merkle_tree/</loc>
+    <lastmod>2020-08-28T12:29:56+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.example.com/post/2020-08-28-spine-challenger/</loc>
+    <lastmod>2020-01-17T16:29:56+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.example.com/post/2016-09-02-dotfiles-without-symlinks/</loc>
+    <lastmod>2016-08-17T16:29:56+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.example.com/post/2016-08-17-learned-optimism/</loc>
+    <lastmod>2016-08-17T16:29:56+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.example.com/post/2018-01-08-winter-fan-dance/</loc>
+    <lastmod>2016-08-17T16:29:56+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.example.com/tags/coding/</loc>
+    <lastmod>2020-08-28T12:29:56+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.example.com/tags/crypto/</loc>
+    <lastmod>2020-08-28T12:29:56+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.example.com/</loc>
+    <lastmod>2020-08-28T12:29:56+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.example.com/post/</loc>
+    <lastmod>2020-08-28T12:29:56+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.example.com/tags/</loc>
+    <lastmod>2020-08-28T12:29:56+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.example.com/tags/running/</loc>
+    <lastmod>2020-01-17T16:29:56+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.example.com/tags/philosophy/</loc>
+    <lastmod>2016-08-17T16:29:56+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.example.com/tags/thoughts/</loc>
+    <lastmod>2016-08-17T16:29:56+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.example.com/topics/</loc>
+  </url>
+  
+</urlset>

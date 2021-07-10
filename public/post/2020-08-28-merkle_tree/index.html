@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="generator" content="Hugo 0.75.1" />
+
+  <title>Creating a Merkle Tree in the shell &middot; decodebytes.sh</title>
+
+    
+
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/1.0.0/pure-min.css">
+
+  <!--[if lte IE 8]>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/1.0.0/grids-responsive-old-ie-min.css">
+  <![endif]-->
+  <!--[if gt IE 8]><!-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/1.0.0/grids-responsive-min.css">
+  <!--<![endif]-->
+
+  <!--[if lte IE 8]>
+  <link rel="stylesheet" href="https://www.example.com/css/side-menu-old-ie.css">
+  <![endif]-->
+  <!--[if gt IE 8]><!-->
+  <link rel="stylesheet" href="https://www.example.com/css/side-menu.css">
+  <!--<![endif]-->
+
+  <link rel="stylesheet" href="https://www.example.com/css/blackburn.css">
+
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet" type="text/css">
+
+  
+  <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+ 
+  
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.6.0/styles/androidstudio.min.css">
+  <script async src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.6.0/highlight.min.js"></script>
+  
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+
+  <link rel="shortcut icon" href="https://www.example.com/img/favicon.ico" type="image/x-icon" />
+
+  
+  
+
+</head>
+
+
+<body>
+<div id="layout">
+
+  
+<a href="#menu" id="menuLink" class="menu-link">
+  
+  <span></span>
+</a>
+<div id="menu">
+
+  
+  <a class="pure-menu-heading brand" href="https://www.example.com/">Blackburn</a>
+
+
+  <div class="pure-menu">
+    <ul class="pure-menu-list">
+      
+      
+        <li class="pure-menu-item">
+          <a class="pure-menu-link" href="https://www.example.com/"><i class='fa fa-home fa-fw'></i>Home</a>
+      
+        </li>
+      
+      
+        <li class="pure-menu-item">
+          <a class="pure-menu-link" href="https://www.example.com/post/"><i class='fa fa-list fa-fw'></i>Posts</a>
+      
+        </li>
+      
+    </ul>
+  </div>
+
+  <div class="pure-menu social">
+  <ul class="pure-menu-list">
+
+    
+
+    
+
+    
+    <li class="pure-menu-item">
+      <a class="pure-menu-link" href="https://twitter.com/decodebytes" rel="me" target="_blank"><i class="fab fa-twitter-square fa-fw"></i>Twitter</a>
+    </li>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <li class="pure-menu-item">
+      <a class="pure-menu-link" href="https://linkedin.com/in/lukehinds" rel="me" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+    </li>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <li class="pure-menu-item">
+      <a class="pure-menu-link" href="https://github.com/lukehinds" rel="me" target="_blank"><i class="fab fa-github-square fa-fw"></i>GitHub</a>
+    </li>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  </ul>
+</div>
+
+
+  <div>
+  <div class="small-print">
+    <small>&copy; 2021. All rights reserved.</small>
+  </div>
+  <div class="small-print">
+    <small>Built with&nbsp;<a href="https://gohugo.io/" target="_blank">Hugo</a></small>
+    <small>Theme&nbsp;<a href="https://github.com/yoshiharuyamashita/blackburn" target="_blank">Blackburn</a></small>
+  </div>
+</div>
+
+</div>
+
+
+  <div id="main">
+
+
+<div class="header">
+  <h1>Creating a Merkle Tree in the shell</h1>
+  <h2></h2>
+</div>
+<div class="content">
+
+  <div class="post-meta">
+
+  <div>
+    <i class="fa fa-calendar fa-fw"></i>
+    <time>28 Aug 2020, 12:29</time>
+  </div>
+
+  
+
+  
+
+  
+  
+  
+  <div>
+    <i class="fa fa-tags fa-fw"></i>
+    
+      <a class="post-taxonomy-tag" href="https://www.example.com/tags/coding">coding</a>&nbsp;&#47;
+    
+      <a class="post-taxonomy-tag" href="https://www.example.com/tags/crypto">crypto</a>
+    
+  </div>
+  
+  
+
+</div>
+
+  <p>I have known about and used Merkle Trees for a while, but never really bothered to construct one manually (no real need as so many good libraries are out there). Well it’s Saturday night, we are in a lock down, so why not?</p>
+<p>For anyone new to Merkle tree’s, they are a binary tree of hashed values concatenated together (one-way hash functions) until an eventual root hash is achieved. The root hash can then be used a sort of integrity snapshot of the entire tree. Merkle trees are currently utilised in three well known applications</p>
+<ul>
+<li>Blockchains (verify transactions)</li>
+<li>Bitorrent (verify file parts)</li>
+<li>Git (bind code revision)</li>
+<li>Transpareny logs (sigstore/rekor &amp; certificate transparency)</li>
+</ul>
+<p>The tree starts at the base with a set of “Data segments”. In a blockchain this would be the transaction. In bitorrent, it would be a file part.</p>
+<p>Lets build the tree using concatenation and hashing (sha256)</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/bin/bash
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e"># Hash the data segments into lead nodes</span>
+leafnodes<span style="color:#f92672">=(</span>HA HB HC HD HE HF HG HH<span style="color:#f92672">)</span>
+
+<span style="color:#66d9ef">for</span> i in <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>leafnodes[@]<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+<span style="color:#66d9ef">do</span>
+   hash<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo -n $i | openssl sha256 | awk <span style="color:#e6db74">&#39;{print $2}&#39;</span><span style="color:#66d9ef">)</span>
+   eval $i<span style="color:#f92672">=</span>$hash
+<span style="color:#66d9ef">done</span>
+
+<span style="color:#75715e"># Construct the parent nodes</span>
+HAB<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo -n <span style="color:#e6db74">${</span>HA<span style="color:#e6db74">}${</span>HB<span style="color:#e6db74">}</span> | openssl sha256 | awk <span style="color:#e6db74">&#39;{print $2}&#39;</span><span style="color:#66d9ef">)</span>
+HCD<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo -n <span style="color:#e6db74">${</span>HC<span style="color:#e6db74">}${</span>HD<span style="color:#e6db74">}</span> | openssl sha256 | awk <span style="color:#e6db74">&#39;{print $2}&#39;</span><span style="color:#66d9ef">)</span>
+
+HEF<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo -n <span style="color:#e6db74">${</span>HE<span style="color:#e6db74">}${</span>HF<span style="color:#e6db74">}</span> | openssl sha256 | awk <span style="color:#e6db74">&#39;{print $2}&#39;</span><span style="color:#66d9ef">)</span>
+HGH<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo -n <span style="color:#e6db74">${</span>HG<span style="color:#e6db74">}${</span>HH<span style="color:#e6db74">}</span> | openssl sha256 | awk <span style="color:#e6db74">&#39;{print $2}&#39;</span><span style="color:#66d9ef">)</span>
+
+HABCD<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo -n <span style="color:#e6db74">${</span>HAB<span style="color:#e6db74">}${</span>HCD<span style="color:#e6db74">}</span> | openssl sha256 | awk <span style="color:#e6db74">&#39;{print $2}&#39;</span><span style="color:#66d9ef">)</span>
+HEFGH<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo -n <span style="color:#e6db74">${</span>HEF<span style="color:#e6db74">}${</span>HGH<span style="color:#e6db74">}</span> | openssl sha256 | awk <span style="color:#e6db74">&#39;{print $2}&#39;</span><span style="color:#66d9ef">)</span>
+
+<span style="color:#75715e"># Compute the Merkle Tree Root</span>
+HABCDEFGH<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo -n <span style="color:#e6db74">${</span>HABCD<span style="color:#e6db74">}${</span>HEFGH<span style="color:#e6db74">}</span> | openssl sha256 | awk <span style="color:#e6db74">&#39;{print $2}&#39;</span><span style="color:#66d9ef">)</span>
+
+<span style="color:#75715e"># Get the values we need for verification</span>
+echo <span style="color:#e6db74">&#34;HC: </span><span style="color:#e6db74">${</span>HC<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+echo <span style="color:#e6db74">&#34;HAB: </span><span style="color:#e6db74">${</span>HAB<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+echo <span style="color:#e6db74">&#34;HEFGH: </span><span style="color:#e6db74">${</span>HEFGH<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+
+echo -n <span style="color:#e6db74">&#34;HABCDEFGH: </span><span style="color:#e6db74">${</span>HABCDEFGH<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</code></pre></div><p>The result of this script will be the merkle root <code>HABCDEFGH</code> and we also spit out some other hashes will we need for verifying later on.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">HC</span>: <span style="color:#ae81ff">616e8cc2cc762815bce92ba8e817da87e92c98b3e3e5c42697caaa76e18c6129</span>
+<span style="color:#f92672">HAB</span>: <span style="color:#ae81ff">545f638df3d2ba4d2295cd1cf6506c05b8340afd5a014f704c741245aab86831</span>
+<span style="color:#f92672">HEFGH</span>: <span style="color:#ae81ff">6d109b1eb6c0ae1353ce98977f15091d2e5d28664f24f362e697da8fc13a6617</span>
+<span style="color:#f92672">HABCDEFGH</span>: <span style="color:#ae81ff">fe65b452f05c006bee04415be7a53030dbcb16040bfd1eb19b3b02f95b4d44d7</span>
+</code></pre></div><h2 id="verify-a-single-data-segment">Verify a single Data Segment</h2>
+<p>Let’s say we now want to verify data segment <code>HD</code>. instead of requiring every data segment, we only need the leafs of <code>HEFGH</code>, <code>HAB</code> and <code>HC</code> and the root <code>HABCDEFGH</code>.</p>
+<p><img src="https://raw.githubusercontent.com/lukehinds/lukehinds.github.io/master/img/merkle-tree.jpg" alt="merkle"></p>
+<p>Lets start by grabbing <code>HD</code> the segment we wish to verify</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">HD<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo -n HD | openssl sha256 | awk <span style="color:#e6db74">&#39;{print $2}&#39;</span><span style="color:#66d9ef">)</span> ; echo $HD
+323e41792751e840ad9e398d5057120cb1f1b730acbb193ee6498eb3b481059c
+</code></pre></div><p>We can now concat and hash <code>HC</code> | <code>HD</code> to get <code>HCD</code></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">HCD<span style="color:#f92672">=</span>$echo -n <span style="color:#e6db74">${</span>HC<span style="color:#e6db74">}${</span>HD<span style="color:#e6db74">}</span> | openssl sha256 | awk <span style="color:#e6db74">&#39;{print $2}&#39;</span><span style="color:#f92672">)</span>
+0f0143cd71707a8db9e6c53b0c7b3fefbf6e16a3a0048d83e81979f753380c42
+</code></pre></div><p>Concat and hash <code>HAD</code> to <code>HAB</code> to get <code>HABCD</code></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">HABCD<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo -n <span style="color:#e6db74">${</span>HAB<span style="color:#e6db74">}${</span>HCD<span style="color:#e6db74">}</span> | openssl sha256 | awk <span style="color:#e6db74">&#39;{print $2}&#39;</span><span style="color:#66d9ef">)</span>; echo $HABCD
+843518e9d62f8b81c794d0ac47e82e2f3f335892b33014262958c9215ff8703b
+</code></pre></div><p>Concat and hash <code>HABCD</code> to <code>HEFGH</code></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">HABCDEFGH<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo -n <span style="color:#e6db74">${</span>HABCD<span style="color:#e6db74">}${</span>HEFGH<span style="color:#e6db74">}</span> | openssl sha256 | awk <span style="color:#e6db74">&#39;{print $2}&#39;</span><span style="color:#66d9ef">)</span>; echo $HABCDEFGH
+fe65b452f05c006bee04415be7a53030dbcb16040bfd1eb19b3b02f95b4d44d7
+</code></pre></div><p>And there we have our root and have verified HD. We were able to verify a data segment from hashing the object we want verified, by having only three hashes from the tree and the root hash <code>&quot;HEFGH&quot;, &quot;HAB&quot;, &quot;HC&quot;, &quot;HABCDEFGH&quot;</code></p>
+
+  
+  <h4><i class="fas fa-share-alt" aria-hidden="true"></i>&nbsp;Share!</h4>
+<ul class="share-buttons">
+	<li><a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fwww.example.com%2fpost%2f2020-08-28-merkle_tree%2f" target="_blank" title="Share on Facebook"><i class="fab fa-facebook" aria-hidden="true"></i><span class="sr-only">Share on Facebook</span></a>
+	</li>&nbsp;&nbsp;&nbsp;
+	<li><a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fwww.example.com%2fpost%2f2020-08-28-merkle_tree%2f" target="_blank" title="Tweet"><i class="fab fa-twitter" aria-hidden="true"></i><span class="sr-only">Tweet</span></a>
+	</li>&nbsp;&nbsp;&nbsp;
+	<li><a href="https://plus.google.com/share?url=https%3a%2f%2fwww.example.com%2fpost%2f2020-08-28-merkle_tree%2f" target="_blank" title="Share on Google+"><i class="fab fa-google-plus" aria-hidden="true"></i><span class="sr-only">Share on Google+</span></a>
+	</li>&nbsp;&nbsp;&nbsp;
+	<li><a href="http://www.tumblr.com/share?v=3&u=https%3a%2f%2fwww.example.com%2fpost%2f2020-08-28-merkle_tree%2f" target="_blank" title="Post to Tumblr"><i class="fab fa-tumblr" aria-hidden="true"></i><span class="sr-only">Post to Tumblr</span></a>
+	</li>&nbsp;&nbsp;&nbsp;
+	<li><a href="http://pinterest.com/pin/create/button/?url=https%3a%2f%2fwww.example.com%2fpost%2f2020-08-28-merkle_tree%2f" target="_blank" title="Pin it"><i class="fab fa-pinterest-p" aria-hidden="true"></i><span class="sr-only">Pin it</span></a>
+	</li>&nbsp;&nbsp;&nbsp;
+	<li><a href="http://www.reddit.com/submit?url=https%3a%2f%2fwww.example.com%2fpost%2f2020-08-28-merkle_tree%2f" target="_blank" title="Submit to Reddit"><i class="fab fa-reddit-alien" aria-hidden="true"></i><span class="sr-only">Submit to Reddit</span></a>
+	</li>
+</ul>
+
+
+<style>
+	ul.share-buttons{
+	  list-style: none;
+	  padding: 0;
+	}
+
+	ul.share-buttons li{
+	  display: inline;
+	}
+
+	ul.share-buttons .sr-only{
+	  position: absolute;
+	  clip: rect(1px 1px 1px 1px);
+	  clip: rect(1px, 1px, 1px, 1px);
+	  padding: 0;
+	  border: 0;
+	  height: 1px;
+	  width: 1px;
+	  overflow: hidden;
+	}
+</style>
+
+
+  
+<div class="prev-next-post pure-g">
+  <div class="pure-u-1-24" style="text-align: left;">
+    
+    <a href="https://www.example.com/post/2020-08-28-spine-challenger/"><i class="fa fa-chevron-left"></i></a>
+    
+  </div>
+  <div class="pure-u-10-24">
+    
+    <nav class="prev">
+      <a href="https://www.example.com/post/2020-08-28-spine-challenger/">Montane Spine Challenger 2020</a>
+    </nav>
+    
+  </div>
+  <div class="pure-u-2-24">
+    &nbsp;
+  </div>
+  <div class="pure-u-10-24">
+    
+  </div>
+  <div class="pure-u-1-24" style="text-align: right;">
+    
+  </div>
+</div>
+
+
+  
+  
+  
+  
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+
+(function() {
+    
+    
+    if (window.location.hostname == "localhost")
+        return;
+
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    var disqus_shortname = 'Your Disqus shortname';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  
+
+</div>
+
+</div>
+</div>
+<script src="https://www.example.com/js/ui.js"></script>
+<script src="https://www.example.com/js/menus.js"></script>
+
+
+
+
+<script>
+  
+  if (window.location.hostname != "localhost") {
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'Your Google Analytics tracking ID', 'auto');
+    ga('send', 'pageview');
+  }
+</script>
+
+
+
+
+
+<script src="https://www.example.com/js/math-code.js"></script>
+  <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+  
+
+
+</body>
+</html>
+

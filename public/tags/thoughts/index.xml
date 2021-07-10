@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>thoughts on decodebytes.sh</title>
+    <link>https://www.example.com/tags/thoughts/</link>
+    <description>Recent content in thoughts on decodebytes.sh</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2021. All rights reserved.</copyright>
+    <lastBuildDate>Wed, 17 Aug 2016 16:29:56 +0100</lastBuildDate><atom:link href="https://www.example.com/tags/thoughts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Learned Optimism</title>
+      <link>https://www.example.com/post/2016-08-17-learned-optimism/</link>
+      <pubDate>Wed, 17 Aug 2016 16:29:56 +0100</pubDate>
+      
+      <guid>https://www.example.com/post/2016-08-17-learned-optimism/</guid>
+      <description>Optimists explain good things as being personal, general, and permanent, and explain away negative factors as being impersonal, specific, and temporary.
+And if you point out the contradiction in their explanations, they see no contradiction. To them, the bad stuff really isn&amp;rsquo;t about them, it&amp;rsquo;s just that one thing that one time.
+Pessimists tend to believe that negative things that happen to them:
+ Will have a long-lasting effect Will affect many situations Are caused by themselves  When something positive happens, the pessimist tends to explains this negatively by:</description>
+    </item>
+    
+  </channel>
+</rss>
