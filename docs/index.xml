@@ -2,38 +2,38 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>decodebytes.sh</title>
-    <link>/</link>
+    <link>https://decodebytes.sh/</link>
     <description>Recent content on decodebytes.sh</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2021. All rights reserved.</copyright>
-    <lastBuildDate>Fri, 28 Aug 2020 12:29:56 +0100</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 28 Aug 2020 12:29:56 +0100</lastBuildDate><atom:link href="https://decodebytes.sh/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Creating a Merkle Tree in the shell</title>
-      <link>/post/2020-08-28-merkle_tree/</link>
+      <link>https://decodebytes.sh/post/2020-08-28-merkle_tree/</link>
       <pubDate>Fri, 28 Aug 2020 12:29:56 +0100</pubDate>
       
-      <guid>/post/2020-08-28-merkle_tree/</guid>
+      <guid>https://decodebytes.sh/post/2020-08-28-merkle_tree/</guid>
       <description>I have known about and used Merkle Trees for a while, but never really bothered to construct one manually (no real need as so many good libraries are out there). Well it’s Saturday night, we are in a lock down, so why not?
 For anyone new to Merkle tree’s, they are a binary tree of hashed values concatenated together (one-way hash functions) until an eventual root hash is achieved. The root hash can then be used a sort of integrity snapshot of the entire tree.</description>
     </item>
     
     <item>
       <title>Montane Spine Challenger 2020</title>
-      <link>/post/2020-08-28-spine-challenger/</link>
+      <link>https://decodebytes.sh/post/2020-08-28-spine-challenger/</link>
       <pubDate>Fri, 17 Jan 2020 16:29:56 +0100</pubDate>
       
-      <guid>/post/2020-08-28-spine-challenger/</guid>
+      <guid>https://decodebytes.sh/post/2020-08-28-spine-challenger/</guid>
       <description>Warning: Contains strong language
 I managed to get to Edale in one piece. This was the first challenge complete. Leading up the race I had been hoovering up any colds or bugs within a 50 meter radius. I had one puking bug and then one head cold bug, just two weeks before the race. I had been militantly washing hands and avoiding public places, but they still landed on me. One Friday evening two weeks out before the race, my six year old said something about wanting to tell me a secret (some nonsense about Unicorns most likely).</description>
     </item>
     
     <item>
       <title>Dotfiles without symlinks</title>
-      <link>/post/2016-09-02-dotfiles-without-symlinks/</link>
+      <link>https://decodebytes.sh/post/2016-09-02-dotfiles-without-symlinks/</link>
       <pubDate>Wed, 17 Aug 2016 16:29:56 +0100</pubDate>
       
-      <guid>/post/2016-09-02-dotfiles-without-symlinks/</guid>
+      <guid>https://decodebytes.sh/post/2016-09-02-dotfiles-without-symlinks/</guid>
       <description>Hands down, this is the best way I have found so far, for managing dotfiles without needing to symlink to a local repo somewhere.
 Instead we use a --bare git repository and set up a simple alias.
 Setup git init --bare $HOME/.dotfiles alias dotfiles=&amp;#39;/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME&amp;#39; echo &amp;#34;alias dotfiles=&amp;#39;/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME&amp;#39;&amp;#34; &amp;gt;&amp;gt; $HOME/.zshrc  note: I am a zshrc user, if your using bash, then echo the alias to .bashrc  Github Create a github repo, named &amp;lsquo;dotfiles&amp;rsquo;</description>
@@ -41,10 +41,10 @@ Setup git init --bare $HOME/.dotfiles alias dotfiles=&amp;#39;/usr/bin/git --git
     
     <item>
       <title>Learned Optimism</title>
-      <link>/post/2016-08-17-learned-optimism/</link>
+      <link>https://decodebytes.sh/post/2016-08-17-learned-optimism/</link>
       <pubDate>Wed, 17 Aug 2016 16:29:56 +0100</pubDate>
       
-      <guid>/post/2016-08-17-learned-optimism/</guid>
+      <guid>https://decodebytes.sh/post/2016-08-17-learned-optimism/</guid>
       <description>Optimists explain good things as being personal, general, and permanent, and explain away negative factors as being impersonal, specific, and temporary.
 And if you point out the contradiction in their explanations, they see no contradiction. To them, the bad stuff really isn&amp;rsquo;t about them, it&amp;rsquo;s just that one thing that one time.
 Pessimists tend to believe that negative things that happen to them:
@@ -53,10 +53,10 @@ Pessimists tend to believe that negative things that happen to them:
     
     <item>
       <title>The Winter Fan Dance 2018</title>
-      <link>/post/2018-01-08-winter-fan-dance/</link>
+      <link>https://decodebytes.sh/post/2018-01-08-winter-fan-dance/</link>
       <pubDate>Wed, 17 Aug 2016 16:29:56 +0100</pubDate>
       
-      <guid>/post/2018-01-08-winter-fan-dance/</guid>
+      <guid>https://decodebytes.sh/post/2018-01-08-winter-fan-dance/</guid>
       <description>This Saturday I went out to the Brecon Beacons in South Wales to take part in an mountain endurance event named the &amp;lsquo;Fan Dance&amp;rsquo;. A basic synopsis is best taking from the organisers themselves Avalanche Endurance Events:
 The Fan Dance is a gruelling 24km Special Air Service Selection test march staged over Pen y Fan, the highest mountain in the Brecon Beacons. The infamous march is the world&amp;rsquo;s oldest Special Forces test and is considered the yardstick of a candidate&amp;rsquo;s potential to perform well on Test Week and ultimately pass the SAS &amp;amp; SBS (Special Boat Service) Selection course.</description>
     </item>

@@ -2,28 +2,28 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>coding on decodebytes.sh</title>
-    <link>/tags/coding/</link>
+    <link>https://decodebytes.sh/tags/coding/</link>
     <description>Recent content in coding on decodebytes.sh</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2021. All rights reserved.</copyright>
-    <lastBuildDate>Fri, 28 Aug 2020 12:29:56 +0100</lastBuildDate><atom:link href="/tags/coding/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 28 Aug 2020 12:29:56 +0100</lastBuildDate><atom:link href="https://decodebytes.sh/tags/coding/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Creating a Merkle Tree in the shell</title>
-      <link>/post/2020-08-28-merkle_tree/</link>
+      <link>https://decodebytes.sh/post/2020-08-28-merkle_tree/</link>
       <pubDate>Fri, 28 Aug 2020 12:29:56 +0100</pubDate>
       
-      <guid>/post/2020-08-28-merkle_tree/</guid>
+      <guid>https://decodebytes.sh/post/2020-08-28-merkle_tree/</guid>
       <description>I have known about and used Merkle Trees for a while, but never really bothered to construct one manually (no real need as so many good libraries are out there). Well it’s Saturday night, we are in a lock down, so why not?
 For anyone new to Merkle tree’s, they are a binary tree of hashed values concatenated together (one-way hash functions) until an eventual root hash is achieved. The root hash can then be used a sort of integrity snapshot of the entire tree.</description>
     </item>
     
     <item>
       <title>Dotfiles without symlinks</title>
-      <link>/post/2016-09-02-dotfiles-without-symlinks/</link>
+      <link>https://decodebytes.sh/post/2016-09-02-dotfiles-without-symlinks/</link>
       <pubDate>Wed, 17 Aug 2016 16:29:56 +0100</pubDate>
       
-      <guid>/post/2016-09-02-dotfiles-without-symlinks/</guid>
+      <guid>https://decodebytes.sh/post/2016-09-02-dotfiles-without-symlinks/</guid>
       <description>Hands down, this is the best way I have found so far, for managing dotfiles without needing to symlink to a local repo somewhere.
 Instead we use a --bare git repository and set up a simple alias.
 Setup git init --bare $HOME/.dotfiles alias dotfiles=&amp;#39;/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME&amp;#39; echo &amp;#34;alias dotfiles=&amp;#39;/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME&amp;#39;&amp;#34; &amp;gt;&amp;gt; $HOME/.zshrc  note: I am a zshrc user, if your using bash, then echo the alias to .bashrc  Github Create a github repo, named &amp;lsquo;dotfiles&amp;rsquo;</description>
