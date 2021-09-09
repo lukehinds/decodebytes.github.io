@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="generator" content="Hugo 0.75.1" />
+
+  <title>Signing tekton pipelines and tasks using chains &middot; decodebytes.sh</title>
+
+    
+
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/1.0.0/pure-min.css">
+
+  <!--[if lte IE 8]>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/1.0.0/grids-responsive-old-ie-min.css">
+  <![endif]-->
+  <!--[if gt IE 8]><!-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/1.0.0/grids-responsive-min.css">
+  <!--<![endif]-->
+
+  <!--[if lte IE 8]>
+  <link rel="stylesheet" href="https://decodebytes.sh/css/side-menu-old-ie.css">
+  <![endif]-->
+  <!--[if gt IE 8]><!-->
+  <link rel="stylesheet" href="https://decodebytes.sh/css/side-menu.css">
+  <!--<![endif]-->
+
+  <link rel="stylesheet" href="https://decodebytes.sh/css/blackburn.css">
+
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet" type="text/css">
+
+  
+  <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+ 
+  
+
+  
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.6.0/styles/androidstudio.min.css">
+  <script async src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.6.0/highlight.min.js"></script>
+  
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+
+  <link rel="shortcut icon" href="https://decodebytes.sh/img/favicon.ico" type="image/x-icon" />
+
+  
+  
+
+</head>
+
+
+<body>
+<div id="layout">
+
+  
+<a href="#menu" id="menuLink" class="menu-link">
+  
+  <span></span>
+</a>
+<div id="menu">
+
+  
+  <a class="pure-menu-heading brand" href="https://decodebytes.sh/">decodebytes.sh</a>
+
+
+  <div class="pure-menu">
+    <ul class="pure-menu-list">
+      
+      
+        <li class="pure-menu-item">
+          <a class="pure-menu-link" href="https://decodebytes.sh/"><i class='fa fa-home fa-fw'></i>Home</a>
+      
+        </li>
+      
+      
+        <li class="pure-menu-item">
+          <a class="pure-menu-link" href="https://decodebytes.sh/post/"><i class='fa fa-list fa-fw'></i>Posts</a>
+      
+        </li>
+      
+    </ul>
+  </div>
+
+  <div class="pure-menu social">
+  <ul class="pure-menu-list">
+
+    
+
+    
+
+    
+    <li class="pure-menu-item">
+      <a class="pure-menu-link" href="https://twitter.com/decodebytes" rel="me" target="_blank"><i class="fab fa-twitter-square fa-fw"></i>Twitter</a>
+    </li>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <li class="pure-menu-item">
+      <a class="pure-menu-link" href="https://linkedin.com/in/lukehinds" rel="me" target="_blank"><i class="fab fa-linkedin fa-fw"></i>LinkedIn</a>
+    </li>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <li class="pure-menu-item">
+      <a class="pure-menu-link" href="https://github.com/lukehinds" rel="me" target="_blank"><i class="fab fa-github-square fa-fw"></i>GitHub</a>
+    </li>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+  </ul>
+</div>
+
+
+  <div>
+  <div class="small-print">
+    <small>&copy; 2021. All rights reserved.</small>
+  </div>
+  <div class="small-print">
+    <small>Built with&nbsp;<a href="https://gohugo.io/" target="_blank">Hugo</a></small>
+    <small>Theme&nbsp;<a href="https://github.com/yoshiharuyamashita/blackburn" target="_blank">Blackburn</a></small>
+  </div>
+</div>
+
+</div>
+
+
+  <div id="main">
+
+
+<div class="header">
+  <h1>Signing tekton pipelines and tasks using chains</h1>
+  <h2></h2>
+</div>
+<div class="content">
+
+  <div class="post-meta">
+
+  <div>
+    <i class="fa fa-calendar fa-fw"></i>
+    <time>09 Sep 2021, 22:19</time>
+  </div>
+
+  
+
+  
+
+  
+  
+  
+  <div>
+    <i class="fa fa-tags fa-fw"></i>
+    
+      <a class="post-taxonomy-tag" href="https://decodebytes.sh/tags/security">security</a>&nbsp;&#47;
+    
+      <a class="post-taxonomy-tag" href="https://decodebytes.sh/tags/crypto">crypto</a>
+    
+  </div>
+  
+  
+
+</div>
+
+  <p>Tekton Chains is a Kubernetes Custom Resource Definition (CRD) controller that
+allows you to manage your supply chain security in Tekton.</p>
+<p>Chains is a project I have followed since it began and I have always wanted more
+time to contribute, but found I got swallowed up into the beast that is sigstore.</p>
+<p>I wanted to change that and now am hoping to work on some sort of inbound
+verification and help folks out more on the project (not that they need it,
+they have been on a blaze with adding sigstore integration with rekor entries
+as well as provenance work including an In-toto attestation formatter).</p>
+<p>This post is really a note dump, which I figure will be useful to others.</p>
+<p>We will set up a kind cluster, tektoncd and chains, generate some keys
+sign a pipeline run. Last of all we will dump out what we need to make a verification.</p>
+<h1 id="grab-some-tools">Grab some tools</h1>
+<ul>
+<li><a href="https://kind.sigs.k8s.io/">kind</a> will be used to set up a quick and lightweight Kubernetes cluster. Kubernetes vresion &gt;= 1.15 is required. This was tested with <code>v0.8.1</code>.</li>
+<li><a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/">kubectl</a></li>
+<li>Additional Tekton CI/CD requirements to install:
+<ul>
+<li><a href="https://github.com/google/ko">ko</a> version &gt;= v0.1 is required to work with and deploy development versions of Tekton. Make sure it&rsquo;s available in your <code>PATH</code>. This was tested with <code>v0.5.1</code>.</li>
+<li><a href="https://github.com/tektoncd/cli">tkn</a> is the Tekton CLI for interacting with Tekton. This was tested with <code>v0.9.0</code>.</li>
+</ul>
+</li>
+</ul>
+<h2 id="set-up-an-local-oci-registry">Set up an local OCI registry</h2>
+<pre><code># cat kind-with-registry.sh  
+
+#!/bin/sh
+set -o errexit
+
+# desired cluster name; default is &quot;kind&quot;
+KIND_CLUSTER_NAME=&quot;${KIND_CLUSTER_NAME:-kind}&quot;
+
+# create registry container unless it already exists
+reg_name='kind-registry'
+reg_port='5000'
+running=&quot;$(docker inspect -f '{{.State.Running}}' &quot;${reg_name}&quot; 2&gt;/dev/null || true)&quot;
+if [ &quot;${running}&quot; != 'true' ]; then
+  docker run \
+    -d --restart=always -p &quot;${reg_port}:5000&quot; --name &quot;${reg_name}&quot; \
+    registry:2
+fi
+
+# create a cluster with the local registry enabled in containerd
+cat &lt;&lt;EOF | kind create cluster --name &quot;${KIND_CLUSTER_NAME}&quot; --config=-
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+containerdConfigPatches:
+- |-
+  [plugins.&quot;io.containerd.grpc.v1.cri&quot;.registry.mirrors.&quot;localhost:${reg_port}&quot;]
+    endpoint = [&quot;http://${reg_name}:${reg_port}&quot;]
+EOF
+</code></pre><h1 id="connect-the-registry-to-the-cluster-network">connect the registry to the cluster network</h1>
+<p><code>docker network connect &quot;kind&quot; &quot;${reg_name}&quot;</code></p>
+<pre><code>for node in $(kind get nodes); do
+  kubectl annotate node &quot;${node}&quot; &quot;kind.x-k8s.io/registry=localhost:${reg_port}&quot;
+done
+</code></pre><p>Set up env</p>
+<pre><code>export PATH=&quot;${PATH}:${GOPATH}/bin&quot;
+export KO_DOCKER_REPO=&quot;localhost:5000/mypipeline&quot;
+</code></pre><p>Lets now deploy pipelines</p>
+<p><code>git clone https://github.com/tektoncd/pipeline</code></p>
+<p>From the <code>tektoncd/pipelines</code> repository</p>
+<p>`ko apply -f config/``</p>
+<p>Deploy chains</p>
+<p><code>git clone https://github.com/tektoncd/chains</code></p>
+<pre><code># from the tektoncd/chains repository
+ko apply -f config/
+</code></pre><p>We now need to create some ecdsa keys</p>
+<pre><code>openssl ecparam -genkey -name prime256v1 &gt; ec_private.pem                                                                                                          ✔  655  09:35:04
+openssl ec -in ec_private.pem -pubout -out ecpubkey.pem                                                                                                            ✔  656  09:35:28
+openssl pkcs8 -topk8 -nocrypt -in ec_private.pem -out x509.pem
+</code></pre><p>Set the key as a signing-secret</p>
+<pre><code>kubectl create secret generic signing-secrets -n tekton-chains --from-file=x509.pem
+</code></pre><p>We now need a simple pipeline to run</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#75715e"># cat hello-world-pipeline.yaml                                                                                                                                         </span>
+<span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">tekton.dev/v1beta1</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Pipeline</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">sample-pipeline</span>
+<span style="color:#f92672">spec</span>:
+  <span style="color:#f92672">tasks</span>:
+    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">echo-something</span>
+      <span style="color:#f92672">taskRef</span>:
+        <span style="color:#f92672">name</span>: <span style="color:#ae81ff">echo-hello-world</span>
+---
+<span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">tekton.dev/v1beta1</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Task</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">echo-hello-world</span>
+<span style="color:#f92672">spec</span>:
+  <span style="color:#f92672">steps</span>:
+    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">echo</span>
+      <span style="color:#f92672">image</span>: <span style="color:#ae81ff">registry.access.redhat.com/ubi8-minimal</span>
+      <span style="color:#f92672">command</span>:
+        - <span style="color:#ae81ff">echo</span>
+      <span style="color:#f92672">args</span>:
+        - <span style="color:#e6db74">&#34;hello world&#34;</span>
+---
+<span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">tekton.dev/v1beta1</span>
+<span style="color:#f92672">kind</span>: <span style="color:#ae81ff">PipelineRun</span>
+<span style="color:#f92672">metadata</span>:
+  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">sample-pipeline-run</span>
+<span style="color:#f92672">spec</span>:
+  <span style="color:#f92672">pipelineRef</span>:
+    <span style="color:#f92672">name</span>: <span style="color:#ae81ff">sample-pipeline</span>
+</code></pre></div><p>Create the pipeline</p>
+<pre><code>kubectl create -f hello-world-pipeline.yaml
+</code></pre><p>Grab the name</p>
+<pre><code>tkn pipelinerun list
+NAME                  STARTED          DURATION    STATUS
+sample-pipeline-run   59 seconds ago   7 seconds   Succeeded
+</code></pre><p>and the taskrun (need this later for getting the signature and payload)</p>
+<pre><code>tkn taskrun list
+NAME                                       STARTED          DURATION    STATUS
+sample-pipeline-run-echo-something-bj8r7   11 seconds ago   7 seconds   Succeeded
+</code></pre><p>Lets find the chains controller to monitor our pipelinerun</p>
+<pre><code>kubectl get pods --all-namespaces
+NAMESPACE            NAME                                                 READY   STATUS      RESTARTS   AGE
+default              sample-pipeline-run-echo-something-bj8r7-pod-swrws   0/1     Completed   0          4m19s
+kube-system          coredns-74ff55c5b-8297p                              1/1     Running     1          2d22h
+kube-system          coredns-74ff55c5b-hd9jn                              1/1     Running     1          2d22h
+kube-system          etcd-kind-control-plane                              1/1     Running     1          2d22h
+kube-system          kindnet-656fx                                        1/1     Running     7          2d22h
+kube-system          kube-apiserver-kind-control-plane                    1/1     Running     4          2d22h
+kube-system          kube-controller-manager-kind-control-plane           1/1     Running     6          2d22h
+kube-system          kube-proxy-nl6j4                                     1/1     Running     1          2d22h
+kube-system          kube-scheduler-kind-control-plane                    1/1     Running     6          2d22h
+local-path-storage   local-path-provisioner-78776bfc44-5dj5z              1/1     Running     16         2d22h
+tekton-chains        tekton-chains-controller-65bbc4d959-6qxx7            1/1     Running     0          18h
+tekton-pipelines     tekton-pipelines-controller-6dd7c9bfcf-b8zbj         1/1     Running     1          2d21h
+tekton-pipelines     tekton-pipelines-webhook-d9c9f4589-kvsgh             1/1     Running     1          2d21h
+</code></pre><p>And lets checkout the logs</p>
+<pre><code>kubectl logs -f tekton-chains-controller-65bbc4d959-6qxx7 -n tekton-chains
+</code></pre><p>And there we see the key found</p>
+<pre><code>{&quot;level&quot;:&quot;info&quot;,&quot;ts&quot;:&quot;2021-05-21T09:42:11.158Z&quot;,&quot;logger&quot;:&quot;watcher&quot;,&quot;caller&quot;:&quot;x509/x509.go:55&quot;,&quot;msg&quot;:&quot;Found x509 key...&quot;}
+</code></pre><p>Let&rsquo;s dig out are sig, payload:</p>
+<pre><code>kubectl get taskrun sample-pipeline-run-echo-something-bj8r7 -o=json | jq -r |grep &quot;payload&quot;| cut -d '&quot;' -f4 |base64 -d &gt; payload
+</code></pre><p>And the same for the signature</p>
+<pre><code>kubectl get taskrun sample-pipeline-run-echo-something-bj8r7 -o=json | jq -r |grep &quot;signature&quot;| cut -d '&quot;' -f4 |base64 -d &gt; signature
+</code></pre><p>And finally lets verify</p>
+<pre><code>openssl dgst -sha256 -verify ecpubkey.pem -signature signature payload
+Verified OK
+</code></pre><p>To delete and start again</p>
+<pre><code>kubectl delete -f hello-world-pipeline.yaml
+</code></pre>
+  
+  <h4><i class="fas fa-share-alt" aria-hidden="true"></i>&nbsp;Share!</h4>
+<ul class="share-buttons">
+	<li><a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdecodebytes.sh%2fpost%2f2021-09-09-tektoncd-chains%2f" target="_blank" title="Share on Facebook"><i class="fab fa-facebook" aria-hidden="true"></i><span class="sr-only">Share on Facebook</span></a>
+	</li>&nbsp;&nbsp;&nbsp;
+	<li><a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fdecodebytes.sh%2fpost%2f2021-09-09-tektoncd-chains%2f" target="_blank" title="Tweet"><i class="fab fa-twitter" aria-hidden="true"></i><span class="sr-only">Tweet</span></a>
+	</li>&nbsp;&nbsp;&nbsp;
+	<li><a href="https://plus.google.com/share?url=https%3a%2f%2fdecodebytes.sh%2fpost%2f2021-09-09-tektoncd-chains%2f" target="_blank" title="Share on Google+"><i class="fab fa-google-plus" aria-hidden="true"></i><span class="sr-only">Share on Google+</span></a>
+	</li>&nbsp;&nbsp;&nbsp;
+	<li><a href="http://www.tumblr.com/share?v=3&u=https%3a%2f%2fdecodebytes.sh%2fpost%2f2021-09-09-tektoncd-chains%2f" target="_blank" title="Post to Tumblr"><i class="fab fa-tumblr" aria-hidden="true"></i><span class="sr-only">Post to Tumblr</span></a>
+	</li>&nbsp;&nbsp;&nbsp;
+	<li><a href="http://pinterest.com/pin/create/button/?url=https%3a%2f%2fdecodebytes.sh%2fpost%2f2021-09-09-tektoncd-chains%2f" target="_blank" title="Pin it"><i class="fab fa-pinterest-p" aria-hidden="true"></i><span class="sr-only">Pin it</span></a>
+	</li>&nbsp;&nbsp;&nbsp;
+	<li><a href="http://www.reddit.com/submit?url=https%3a%2f%2fdecodebytes.sh%2fpost%2f2021-09-09-tektoncd-chains%2f" target="_blank" title="Submit to Reddit"><i class="fab fa-reddit-alien" aria-hidden="true"></i><span class="sr-only">Submit to Reddit</span></a>
+	</li>
+</ul>
+
+
+<style>
+	ul.share-buttons{
+	  list-style: none;
+	  padding: 0;
+	}
+
+	ul.share-buttons li{
+	  display: inline;
+	}
+
+	ul.share-buttons .sr-only{
+	  position: absolute;
+	  clip: rect(1px 1px 1px 1px);
+	  clip: rect(1px, 1px, 1px, 1px);
+	  padding: 0;
+	  border: 0;
+	  height: 1px;
+	  width: 1px;
+	  overflow: hidden;
+	}
+</style>
+
+
+  
+<div class="prev-next-post pure-g">
+  <div class="pure-u-1-24" style="text-align: left;">
+    
+    <a href="https://decodebytes.sh/post/2020-08-28-merkle_tree/"><i class="fa fa-chevron-left"></i></a>
+    
+  </div>
+  <div class="pure-u-10-24">
+    
+    <nav class="prev">
+      <a href="https://decodebytes.sh/post/2020-08-28-merkle_tree/">Creating a Merkle Tree in the shell</a>
+    </nav>
+    
+  </div>
+  <div class="pure-u-2-24">
+    &nbsp;
+  </div>
+  <div class="pure-u-10-24">
+    
+  </div>
+  <div class="pure-u-1-24" style="text-align: right;">
+    
+  </div>
+</div>
+
+
+  
+  
+  
+  
+
+  
+
+</div>
+
+</div>
+</div>
+<script src="https://decodebytes.sh/js/ui.js"></script>
+<script src="https://decodebytes.sh/js/menus.js"></script>
+
+
+
+
+<script>
+  
+  if (window.location.hostname != "localhost") {
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'Your Google Analytics tracking ID', 'auto');
+    ga('send', 'pageview');
+  }
+</script>
+
+
+
+
+
+<script src="https://decodebytes.sh/js/math-code.js"></script>
+  <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+  
+
+
+</body>
+</html>
+

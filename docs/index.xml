@@ -7,7 +7,18 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2021. All rights reserved.</copyright>
-    <lastBuildDate>Fri, 28 Aug 2020 12:29:56 +0100</lastBuildDate><atom:link href="https://decodebytes.sh/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 09 Sep 2021 22:19:13 +0100</lastBuildDate><atom:link href="https://decodebytes.sh/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Signing tekton pipelines and tasks using chains</title>
+      <link>https://decodebytes.sh/post/2021-09-09-tektoncd-chains/</link>
+      <pubDate>Thu, 09 Sep 2021 22:19:13 +0100</pubDate>
+      
+      <guid>https://decodebytes.sh/post/2021-09-09-tektoncd-chains/</guid>
+      <description>Tekton Chains is a Kubernetes Custom Resource Definition (CRD) controller that allows you to manage your supply chain security in Tekton.
+Chains is a project I have followed since it began and I have always wanted more time to contribute, but found I got swallowed up into the beast that is sigstore.
+I wanted to change that and now am hoping to work on some sort of inbound verification and help folks out more on the project (not that they need it, they have been on a blaze with adding sigstore integration with rekor entries as well as provenance work including an In-toto attestation formatter).</description>
+    </item>
+    
     <item>
       <title>Creating a Merkle Tree in the shell</title>
       <link>https://decodebytes.sh/post/2020-08-28-merkle_tree/</link>

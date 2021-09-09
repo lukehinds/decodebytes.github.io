@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://decodebytes.sh/post/2021-09-09-tektoncd-chains/</loc>
+    <lastmod>2021-09-09T22:19:13+01:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://decodebytes.sh/post/2020-08-28-merkle_tree/</loc>
     <lastmod>2020-08-28T12:29:56+01:00</lastmod>
   </url>
@@ -28,27 +33,32 @@
   </url>
   
   <url>
-    <loc>https://decodebytes.sh/tags/coding/</loc>
-    <lastmod>2020-08-28T12:29:56+01:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://decodebytes.sh/tags/crypto/</loc>
-    <lastmod>2020-08-28T12:29:56+01:00</lastmod>
+    <lastmod>2021-09-09T22:19:13+01:00</lastmod>
   </url>
   
   <url>
     <loc>https://decodebytes.sh/</loc>
-    <lastmod>2020-08-28T12:29:56+01:00</lastmod>
+    <lastmod>2021-09-09T22:19:13+01:00</lastmod>
   </url>
   
   <url>
     <loc>https://decodebytes.sh/post/</loc>
-    <lastmod>2020-08-28T12:29:56+01:00</lastmod>
+    <lastmod>2021-09-09T22:19:13+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://decodebytes.sh/tags/security/</loc>
+    <lastmod>2021-09-09T22:19:13+01:00</lastmod>
   </url>
   
   <url>
     <loc>https://decodebytes.sh/tags/</loc>
+    <lastmod>2021-09-09T22:19:13+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://decodebytes.sh/tags/coding/</loc>
     <lastmod>2020-08-28T12:29:56+01:00</lastmod>
   </url>
   
