@@ -254,56 +254,62 @@ sign a pipeline run. Last of all we will dump out what we need to make a verific
 </li>
 </ul>
 <h2 id="set-up-an-local-oci-registry">Set up an local OCI registry</h2>
-<pre><code># cat kind-with-registry.sh  
+<p>Use the following script <code>kind-with-registry.sh</code></p>
+<p>Grab it <a href="https://gist.githubusercontent.com/lukehinds/7da31f34c1f05942936f2bdb9d71c167/raw/7b7aee3333a8c511fc3cbeb0cc1d9574600caf89/kind-with-registry.sh">here if easier</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/bin/sh
+</span><span style="color:#75715e"></span>set -o errexit
 
-#!/bin/sh
-set -o errexit
+<span style="color:#75715e"># desired cluster name; default is &#34;kind&#34;</span>
+KIND_CLUSTER_NAME<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>KIND_CLUSTER_NAME<span style="color:#66d9ef">:-</span>kind<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
 
-# desired cluster name; default is &quot;kind&quot;
-KIND_CLUSTER_NAME=&quot;${KIND_CLUSTER_NAME:-kind}&quot;
+<span style="color:#75715e"># create registry container unless it already exists</span>
+reg_name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;kind-registry&#39;</span>
+reg_port<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;5000&#39;</span>
+running<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>docker inspect -f <span style="color:#e6db74">&#39;{{.State.Running}}&#39;</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>reg_name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> 2&gt;/dev/null <span style="color:#f92672">||</span> true<span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span>
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>running<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> !<span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;true&#39;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
+  docker run <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -d --restart<span style="color:#f92672">=</span>always -p <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>reg_port<span style="color:#e6db74">}</span><span style="color:#e6db74">:5000&#34;</span> --name <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>reg_name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    registry:2
+<span style="color:#66d9ef">fi</span>
 
-# create registry container unless it already exists
-reg_name='kind-registry'
-reg_port='5000'
-running=&quot;$(docker inspect -f '{{.State.Running}}' &quot;${reg_name}&quot; 2&gt;/dev/null || true)&quot;
-if [ &quot;${running}&quot; != 'true' ]; then
-  docker run \
-    -d --restart=always -p &quot;${reg_port}:5000&quot; --name &quot;${reg_name}&quot; \
-    registry:2
-fi
+<span style="color:#75715e"># create a cluster with the local registry enabled in containerd</span>
+cat <span style="color:#e6db74">&lt;&lt;EOF | kind create cluster --name &#34;${KIND_CLUSTER_NAME}&#34; --config=-
+</span><span style="color:#e6db74">kind: Cluster
+</span><span style="color:#e6db74">apiVersion: kind.x-k8s.io/v1alpha4
+</span><span style="color:#e6db74">containerdConfigPatches:
+</span><span style="color:#e6db74">- |-
+</span><span style="color:#e6db74">  [plugins.&#34;io.containerd.grpc.v1.cri&#34;.registry.mirrors.&#34;localhost:${reg_port}&#34;]
+</span><span style="color:#e6db74">    endpoint = [&#34;http://${reg_name}:${reg_port}&#34;]
+</span><span style="color:#e6db74">EOF</span>
 
-# create a cluster with the local registry enabled in containerd
-cat &lt;&lt;EOF | kind create cluster --name &quot;${KIND_CLUSTER_NAME}&quot; --config=-
-kind: Cluster
-apiVersion: kind.x-k8s.io/v1alpha4
-containerdConfigPatches:
-- |-
-  [plugins.&quot;io.containerd.grpc.v1.cri&quot;.registry.mirrors.&quot;localhost:${reg_port}&quot;]
-    endpoint = [&quot;http://${reg_name}:${reg_port}&quot;]
-EOF
-</code></pre><h1 id="connect-the-registry-to-the-cluster-network">connect the registry to the cluster network</h1>
-<p><code>docker network connect &quot;kind&quot; &quot;${reg_name}&quot;</code></p>
-<pre><code>for node in $(kind get nodes); do
-  kubectl annotate node &quot;${node}&quot; &quot;kind.x-k8s.io/registry=localhost:${reg_port}&quot;
-done
-</code></pre><p>Set up env</p>
-<pre><code>export PATH=&quot;${PATH}:${GOPATH}/bin&quot;
-export KO_DOCKER_REPO=&quot;localhost:5000/mypipeline&quot;
-</code></pre><p>Lets now deploy pipelines</p>
-<p><code>git clone https://github.com/tektoncd/pipeline</code></p>
-<p>From the <code>tektoncd/pipelines</code> repository</p>
-<p>`ko apply -f config/``</p>
-<p>Deploy chains</p>
-<p><code>git clone https://github.com/tektoncd/chains</code></p>
-<pre><code># from the tektoncd/chains repository
+<span style="color:#75715e"># connect the registry to the cluster network</span>
+docker network connect <span style="color:#e6db74">&#34;kind&#34;</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>reg_name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+
+<span style="color:#75715e"># tell https://tilt.dev to use the registry</span>
+<span style="color:#75715e"># https://docs.tilt.dev/choosing_clusters.html#discovering-the-registry</span>
+<span style="color:#66d9ef">for</span> node in <span style="color:#66d9ef">$(</span>kind get nodes<span style="color:#66d9ef">)</span>; <span style="color:#66d9ef">do</span>
+  kubectl annotate node <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>node<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> <span style="color:#e6db74">&#34;kind.x-k8s.io/registry=localhost:</span><span style="color:#e6db74">${</span>reg_port<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+<span style="color:#66d9ef">done</span>
+</code></pre></div><p>Run your script</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">./kind-with-registry.sh<span style="color:#e6db74">`</span>
+</code></pre></div><p>Set up env</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">export PATH<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>PATH<span style="color:#e6db74">}</span><span style="color:#e6db74">:</span><span style="color:#e6db74">${</span>GOPATH<span style="color:#e6db74">}</span><span style="color:#e6db74">/bin&#34;</span>
+export KO_DOCKER_REPO<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;localhost:5000/mypipeline&#34;</span>
+</code></pre></div><p>Lets now deploy pipelines</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git clone https://github.com/tektoncd/pipeline
+</code></pre></div><p>From the <code>tektoncd/pipelines</code> repository</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ko apply -f config/
+</code></pre></div><p>Deploy chains</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git clone https://github.com/tektoncd/chains
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># from the tektoncd/chains repository</span>
 ko apply -f config/
-</code></pre><p>We now need to create some ecdsa keys</p>
-<pre><code>openssl ecparam -genkey -name prime256v1 &gt; ec_private.pem                                                                                                          ✔  655  09:35:04
-openssl ec -in ec_private.pem -pubout -out ecpubkey.pem                                                                                                            ✔  656  09:35:28
+</code></pre></div><p>We now need to create some ecdsa keys</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">openssl ecparam -genkey -name prime256v1 &gt; ec_private.pem                                                                                                          ✔  <span style="color:#ae81ff">655</span>  09:35:04
+openssl ec -in ec_private.pem -pubout -out ecpubkey.pem                                                                                                            ✔  <span style="color:#ae81ff">656</span>  09:35:28
 openssl pkcs8 -topk8 -nocrypt -in ec_private.pem -out x509.pem
-</code></pre><p>Set the key as a signing-secret</p>
-<pre><code>kubectl create secret generic signing-secrets -n tekton-chains --from-file=x509.pem
-</code></pre><p>We now need a simple pipeline to run</p>
+</code></pre></div><p>Set the key as a signing-secret</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl create secret generic signing-secrets -n tekton-chains --from-file<span style="color:#f92672">=</span>x509.pem
+</code></pre></div><p>We now need a simple pipeline to run</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#75715e"># cat hello-world-pipeline.yaml                                                                                                                                         </span>
 <span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">tekton.dev/v1beta1</span>
 <span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Pipeline</span>
@@ -336,45 +342,45 @@ openssl pkcs8 -topk8 -nocrypt -in ec_private.pem -out x509.pem
   <span style="color:#f92672">pipelineRef</span>:
     <span style="color:#f92672">name</span>: <span style="color:#ae81ff">sample-pipeline</span>
 </code></pre></div><p>Create the pipeline</p>
-<pre><code>kubectl create -f hello-world-pipeline.yaml
-</code></pre><p>Grab the name</p>
-<pre><code>tkn pipelinerun list
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl create -f hello-world-pipeline.yaml
+</code></pre></div><p>Grab the name</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">tkn pipelinerun list
 NAME                  STARTED          DURATION    STATUS
-sample-pipeline-run   59 seconds ago   7 seconds   Succeeded
-</code></pre><p>and the taskrun (need this later for getting the signature and payload)</p>
-<pre><code>tkn taskrun list
+sample-pipeline-run   <span style="color:#ae81ff">59</span> seconds ago   <span style="color:#ae81ff">7</span> seconds   Succeeded
+</code></pre></div><p>and the taskrun (need this later for getting the signature and payload)</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">tkn taskrun list
 NAME                                       STARTED          DURATION    STATUS
-sample-pipeline-run-echo-something-bj8r7   11 seconds ago   7 seconds   Succeeded
-</code></pre><p>Lets find the chains controller to monitor our pipelinerun</p>
-<pre><code>kubectl get pods --all-namespaces
+sample-pipeline-run-echo-something-bj8r7   <span style="color:#ae81ff">11</span> seconds ago   <span style="color:#ae81ff">7</span> seconds   Succeeded
+</code></pre></div><p>Lets find the chains controller to monitor our pipelinerun</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get pods --all-namespaces
 NAMESPACE            NAME                                                 READY   STATUS      RESTARTS   AGE
-default              sample-pipeline-run-echo-something-bj8r7-pod-swrws   0/1     Completed   0          4m19s
-kube-system          coredns-74ff55c5b-8297p                              1/1     Running     1          2d22h
-kube-system          coredns-74ff55c5b-hd9jn                              1/1     Running     1          2d22h
-kube-system          etcd-kind-control-plane                              1/1     Running     1          2d22h
-kube-system          kindnet-656fx                                        1/1     Running     7          2d22h
-kube-system          kube-apiserver-kind-control-plane                    1/1     Running     4          2d22h
-kube-system          kube-controller-manager-kind-control-plane           1/1     Running     6          2d22h
-kube-system          kube-proxy-nl6j4                                     1/1     Running     1          2d22h
-kube-system          kube-scheduler-kind-control-plane                    1/1     Running     6          2d22h
-local-path-storage   local-path-provisioner-78776bfc44-5dj5z              1/1     Running     16         2d22h
-tekton-chains        tekton-chains-controller-65bbc4d959-6qxx7            1/1     Running     0          18h
-tekton-pipelines     tekton-pipelines-controller-6dd7c9bfcf-b8zbj         1/1     Running     1          2d21h
-tekton-pipelines     tekton-pipelines-webhook-d9c9f4589-kvsgh             1/1     Running     1          2d21h
-</code></pre><p>And lets checkout the logs</p>
-<pre><code>kubectl logs -f tekton-chains-controller-65bbc4d959-6qxx7 -n tekton-chains
-</code></pre><p>And there we see the key found</p>
-<pre><code>{&quot;level&quot;:&quot;info&quot;,&quot;ts&quot;:&quot;2021-05-21T09:42:11.158Z&quot;,&quot;logger&quot;:&quot;watcher&quot;,&quot;caller&quot;:&quot;x509/x509.go:55&quot;,&quot;msg&quot;:&quot;Found x509 key...&quot;}
-</code></pre><p>Let&rsquo;s dig out are sig, payload:</p>
-<pre><code>kubectl get taskrun sample-pipeline-run-echo-something-bj8r7 -o=json | jq -r |grep &quot;payload&quot;| cut -d '&quot;' -f4 |base64 -d &gt; payload
-</code></pre><p>And the same for the signature</p>
-<pre><code>kubectl get taskrun sample-pipeline-run-echo-something-bj8r7 -o=json | jq -r |grep &quot;signature&quot;| cut -d '&quot;' -f4 |base64 -d &gt; signature
-</code></pre><p>And finally lets verify</p>
-<pre><code>openssl dgst -sha256 -verify ecpubkey.pem -signature signature payload
+default              sample-pipeline-run-echo-something-bj8r7-pod-swrws   0/1     Completed   <span style="color:#ae81ff">0</span>          4m19s
+kube-system          coredns-74ff55c5b-8297p                              1/1     Running     <span style="color:#ae81ff">1</span>          2d22h
+kube-system          coredns-74ff55c5b-hd9jn                              1/1     Running     <span style="color:#ae81ff">1</span>          2d22h
+kube-system          etcd-kind-control-plane                              1/1     Running     <span style="color:#ae81ff">1</span>          2d22h
+kube-system          kindnet-656fx                                        1/1     Running     <span style="color:#ae81ff">7</span>          2d22h
+kube-system          kube-apiserver-kind-control-plane                    1/1     Running     <span style="color:#ae81ff">4</span>          2d22h
+kube-system          kube-controller-manager-kind-control-plane           1/1     Running     <span style="color:#ae81ff">6</span>          2d22h
+kube-system          kube-proxy-nl6j4                                     1/1     Running     <span style="color:#ae81ff">1</span>          2d22h
+kube-system          kube-scheduler-kind-control-plane                    1/1     Running     <span style="color:#ae81ff">6</span>          2d22h
+local-path-storage   local-path-provisioner-78776bfc44-5dj5z              1/1     Running     <span style="color:#ae81ff">16</span>         2d22h
+tekton-chains        tekton-chains-controller-65bbc4d959-6qxx7            1/1     Running     <span style="color:#ae81ff">0</span>          18h
+tekton-pipelines     tekton-pipelines-controller-6dd7c9bfcf-b8zbj         1/1     Running     <span style="color:#ae81ff">1</span>          2d21h
+tekton-pipelines     tekton-pipelines-webhook-d9c9f4589-kvsgh             1/1     Running     <span style="color:#ae81ff">1</span>          2d21h
+</code></pre></div><p>And lets checkout the logs</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl logs -f tekton-chains-controller-65bbc4d959-6qxx7 -n tekton-chains
+</code></pre></div><p>And there we see the key found</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#f92672">{</span><span style="color:#e6db74">&#34;level&#34;</span>:<span style="color:#e6db74">&#34;info&#34;</span>,<span style="color:#e6db74">&#34;ts&#34;</span>:<span style="color:#e6db74">&#34;2021-05-21T09:42:11.158Z&#34;</span>,<span style="color:#e6db74">&#34;logger&#34;</span>:<span style="color:#e6db74">&#34;watcher&#34;</span>,<span style="color:#e6db74">&#34;caller&#34;</span>:<span style="color:#e6db74">&#34;x509/x509.go:55&#34;</span>,<span style="color:#e6db74">&#34;msg&#34;</span>:<span style="color:#e6db74">&#34;Found x509 key...&#34;</span><span style="color:#f92672">}</span>
+</code></pre></div><p>Let&rsquo;s dig out are sig, payload:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get taskrun sample-pipeline-run-echo-something-bj8r7 -o<span style="color:#f92672">=</span>json | jq -r |grep <span style="color:#e6db74">&#34;payload&#34;</span>| cut -d <span style="color:#e6db74">&#39;&#34;&#39;</span> -f4 |base64 -d &gt; payload
+</code></pre></div><p>And the same for the signature</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl get taskrun sample-pipeline-run-echo-something-bj8r7 -o<span style="color:#f92672">=</span>json | jq -r |grep <span style="color:#e6db74">&#34;signature&#34;</span>| cut -d <span style="color:#e6db74">&#39;&#34;&#39;</span> -f4 |base64 -d &gt; signature
+</code></pre></div><p>And finally lets verify</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">openssl dgst -sha256 -verify ecpubkey.pem -signature signature payload
 Verified OK
-</code></pre><p>To delete and start again</p>
-<pre><code>kubectl delete -f hello-world-pipeline.yaml
-</code></pre>
+</code></pre></div><p>To delete and start again</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">kubectl delete -f hello-world-pipeline.yaml
+</code></pre></div>
   
   <h4><i class="fas fa-share-alt" aria-hidden="true"></i>&nbsp;Share!</h4>
 <ul class="share-buttons">

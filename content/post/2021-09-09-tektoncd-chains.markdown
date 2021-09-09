@@ -40,9 +40,12 @@ sign a pipeline run. Last of all we will dump out what we need to make a verific
 
 ## Set up an local OCI registry
 
-```
-# cat kind-with-registry.sh  
+Use the following script `kind-with-registry.sh`
 
+Grab it [here if easier](https://gist.githubusercontent.com/lukehinds/7da31f34c1f05942936f2bdb9d71c167/raw/7b7aee3333a8c511fc3cbeb0cc1d9574600caf89/kind-with-registry.sh)
+
+
+```bash
 #!/bin/sh
 set -o errexit
 
@@ -68,47 +71,58 @@ containerdConfigPatches:
   [plugins."io.containerd.grpc.v1.cri".registry.mirrors."localhost:${reg_port}"]
     endpoint = ["http://${reg_name}:${reg_port}"]
 EOF
-```
 
 # connect the registry to the cluster network
-`docker network connect "kind" "${reg_name}"`
+docker network connect "kind" "${reg_name}"
 
-
-```
+# tell https://tilt.dev to use the registry
+# https://docs.tilt.dev/choosing_clusters.html#discovering-the-registry
 for node in $(kind get nodes); do
   kubectl annotate node "${node}" "kind.x-k8s.io/registry=localhost:${reg_port}"
 done
 ```
 
+Run your script
+
+```bash
+./kind-with-registry.sh`
+```
+
 Set up env
 
-```                                                                                             
+```bash                                                                                        
 export PATH="${PATH}:${GOPATH}/bin"
 export KO_DOCKER_REPO="localhost:5000/mypipeline"
 ```
 
 Lets now deploy pipelines
 
-`git clone https://github.com/tektoncd/pipeline`
+```bash
+git clone https://github.com/tektoncd/pipeline
+```
 
 
 From the `tektoncd/pipelines` repository
 
-`ko apply -f config/``
+```bash
+ko apply -f config/
+```
 
 Deploy chains
 
-`git clone https://github.com/tektoncd/chains`
-
-
+```bash
+git clone https://github.com/tektoncd/chains
 ```
+
+
+```bash
 # from the tektoncd/chains repository
 ko apply -f config/
 ```
 
 We now need to create some ecdsa keys
 
-```
+```bash
 openssl ecparam -genkey -name prime256v1 > ec_private.pem                                                                                                          ✔  655  09:35:04
 openssl ec -in ec_private.pem -pubout -out ecpubkey.pem                                                                                                            ✔  656  09:35:28
 openssl pkcs8 -topk8 -nocrypt -in ec_private.pem -out x509.pem
@@ -116,7 +130,7 @@ openssl pkcs8 -topk8 -nocrypt -in ec_private.pem -out x509.pem
 
 Set the key as a signing-secret
 
-```
+```bash
 kubectl create secret generic signing-secrets -n tekton-chains --from-file=x509.pem
 ```
 
@@ -158,13 +172,13 @@ spec:
 
 Create the pipeline
 
-```
+```bash
 kubectl create -f hello-world-pipeline.yaml
 ```
 
 Grab the name
 
-```
+```bash
 tkn pipelinerun list
 NAME                  STARTED          DURATION    STATUS
 sample-pipeline-run   59 seconds ago   7 seconds   Succeeded
@@ -172,7 +186,7 @@ sample-pipeline-run   59 seconds ago   7 seconds   Succeeded
 
 and the taskrun (need this later for getting the signature and payload)
 
-```
+```bash
 tkn taskrun list
 NAME                                       STARTED          DURATION    STATUS
 sample-pipeline-run-echo-something-bj8r7   11 seconds ago   7 seconds   Succeeded
@@ -180,7 +194,7 @@ sample-pipeline-run-echo-something-bj8r7   11 seconds ago   7 seconds   Succeede
 
 Lets find the chains controller to monitor our pipelinerun
 
-```
+```bash
 kubectl get pods --all-namespaces
 NAMESPACE            NAME                                                 READY   STATUS      RESTARTS   AGE
 default              sample-pipeline-run-echo-something-bj8r7-pod-swrws   0/1     Completed   0          4m19s
@@ -200,37 +214,37 @@ tekton-pipelines     tekton-pipelines-webhook-d9c9f4589-kvsgh             1/1   
 
 And lets checkout the logs
 
-```
+```bash
 kubectl logs -f tekton-chains-controller-65bbc4d959-6qxx7 -n tekton-chains
 ```
 
 And there we see the key found
 
-```
+```bash
 {"level":"info","ts":"2021-05-21T09:42:11.158Z","logger":"watcher","caller":"x509/x509.go:55","msg":"Found x509 key..."}
 ```
 
 Let's dig out are sig, payload:
 
-```
+```bash
 kubectl get taskrun sample-pipeline-run-echo-something-bj8r7 -o=json | jq -r |grep "payload"| cut -d '"' -f4 |base64 -d > payload
 ```
 
 And the same for the signature
 
-```
+```bash
 kubectl get taskrun sample-pipeline-run-echo-something-bj8r7 -o=json | jq -r |grep "signature"| cut -d '"' -f4 |base64 -d > signature
 ```
 
 And finally lets verify
 
-```
+```bash
 openssl dgst -sha256 -verify ecpubkey.pem -signature signature payload
 Verified OK
 ```
 
 To delete and start again
 
-```
+```bash
 kubectl delete -f hello-world-pipeline.yaml
 ```
